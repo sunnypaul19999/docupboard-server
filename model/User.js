@@ -7,8 +7,8 @@
 //     }
 // });
 
-const mysqlClient = require('../config/Database').mysqlClient;
-const mysqlConfig = require('../config/Database').mysqlConfig;
+const mysqlClient = require('../config/database.config').mysqlClient;
+const mysqlConfig = require('../config/database.config').mysqlConfig;
 
 async function getUserTable() {
     return mysqlClient.getSession().then(async (session) => {
@@ -21,7 +21,7 @@ async function getUsers() {
     const userTable = await getUserTable();
 
     return userTable
-        .select("user_id", "username", "access_token", "refresh_token")
+        .select("user_id", "user_email")
         .execute()
         .then(res => {
             let result = res.fetchAll();
@@ -29,9 +29,7 @@ async function getUsers() {
                 result = result.map(row => {
                     return {
                         user_id: row[0],
-                        username: row[1],
-                        // access_token: row[2],
-                        // refresh_token: row[3],
+                        user_email: row[1]
                     };
                 });
             } else {
@@ -42,22 +40,20 @@ async function getUsers() {
         });
 }
 
-async function getUser(username) {
+async function getUser(userEmail) {
     const userTable = await getUserTable();
 
     return userTable
-        .select("user_id", "username", "access_token", "refresh_token")
-        .where('username = :username')
-        .bind('username', username)
+        .select("user_id", "user_email")
+        .where('user_email = :user_email')
+        .bind('user_email', userEmail)
         .execute()
         .then(res => {
             const result = res.fetchOne();
             if (result) {
                 return {
                     user_id: result[0],
-                    username: result[1],
-                    // access_token: result[2],
-                    // refresh_token: result[3],
+                    user_email: result[1]
                 };
             } else {
                 return null;
@@ -65,36 +61,20 @@ async function getUser(username) {
         });
 }
 
-async function addUser(userId, username, accessToken, refreshToken) {
+async function addUserIfNotExists(userId, userEmail) {
     const userTable = await getUserTable();
 
-    const user = await getUser(username);
+    const user = await getUser(userEmail);
 
     if (user == null) {
         return await userTable
-            .insert("user_id", "username", "access_token", "refresh_token")
-            .values(userId, username, accessToken, refreshToken ?? null)
+            .insert("user_id", "user_email")
+            .values(userId, userEmail)
             .execute()
-            .then(async (res) => {
-                return {
-                    ...await getUser(username),
-                    didExist: false
-                };
-            });
-    } else {
-        return await userTable
-            .update()
-            .where('username = :username')
-            .bind('username', username)
-            .set('access_token', accessToken)
-            .execute()
-            .then(async (res) => {
-                return {
-                    ...await getUser(username),
-                    didExist: true
-                };
-            });
+            .then(async () => await getUser(userEmail));
     }
+
+    return user;
 }
 
 // console.log('asfsf');
@@ -105,4 +85,4 @@ async function addUser(userId, username, accessToken, refreshToken) {
 
 module.exports.getUsers = getUsers;
 module.exports.getUser = getUser;
-module.exports.addUser = addUser;
+module.exports.addUserIfNotExists = addUserIfNotExists;

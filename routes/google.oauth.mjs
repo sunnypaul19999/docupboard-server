@@ -70,6 +70,8 @@ async function onGoogleCallback(req, res) {
         });
 
         const userInfo = await getGoogleUserInfo(oauthRes.data.id_token, oauthRes.data.access_token);
+        //on successfull login setting the user id in cookie
+        req.session.userId = userInfo.id;
         res.send(userInfo);
     } catch (err) {
         console.log(err, 'failed to exchange auth token');
