@@ -1,14 +1,4 @@
-// const mysqlx = require('@mysql/xdevapi');
-// const mysqlConfig = require('../config/Database').mysqlConfig;
-// const mysqlClient = mysqlx.getClient(mysqlConfig.connection, {
-//     pooling: {
-//         enabled: true,
-//         maxSize: 200
-//     }
-// });
-
-const mysqlClient = require('../config/database.config').mysqlClient;
-const mysqlConfig = require('../config/database.config').mysqlConfig;
+import { mysqlConfig, mysqlClient } from '../config/database.config.mjs';
 
 async function getUserTable() {
     return mysqlClient.getSession().then(async (session) => {
@@ -17,7 +7,7 @@ async function getUserTable() {
     });
 }
 
-async function getUsers() {
+async function queryUsers() {
     const userTable = await getUserTable();
 
     return userTable
@@ -40,7 +30,7 @@ async function getUsers() {
         });
 }
 
-async function getUser(userEmail) {
+async function queryUser(userEmail) {
     const userTable = await getUserTable();
 
     return userTable
@@ -61,7 +51,7 @@ async function getUser(userEmail) {
         });
 }
 
-async function addUserIfNotExists(userId, userEmail) {
+async function persistUserIfNotExists(userId, userEmail) {
     const userTable = await getUserTable();
 
     const user = await getUser(userEmail);
@@ -83,6 +73,8 @@ async function addUserIfNotExists(userId, userEmail) {
 //         console.log(res);
 //     });
 
-module.exports.getUsers = getUsers;
-module.exports.getUser = getUser;
-module.exports.addUserIfNotExists = addUserIfNotExists;
+// module.exports.getUsers = getUsers;
+// module.exports.getUser = getUser;
+// module.exports.addUserIfNotExists = addUserIfNotExists;
+
+export { queryUser, queryUsers, persistUserIfNotExists };

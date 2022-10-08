@@ -9,7 +9,7 @@ async function getFileRecordTable() {
     });
 }
 
-async function addFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath) {
+async function persistFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath) {
     const userTable = await getFileRecordTable();
     // console.log(userId, fileStorageName, fileName, fileSize, fileType);
     // const user = await getUser(username);
@@ -21,7 +21,7 @@ async function addFileRecord(userId, fileStorageName, fileName, fileSize, fileTy
         .then(async () => await getFileRecord(userId, fileStorageName));
 }
 
-async function getFileRecord(userId, fileStorageName) {
+async function queryFileRecord(userId, fileStorageName) {
     const userTable = await getFileRecordTable();
     console.log(userId + ' ' + fileStorageName);
     return userTable
@@ -48,7 +48,7 @@ async function getFileRecord(userId, fileStorageName) {
         });
 }
 
-async function getAllFileRecordOfUser(userId) {
+async function queryAllFileRecordOfUser(userId) {
     const userTable = await getFileRecordTable();
 
     return userTable
@@ -79,6 +79,4 @@ async function getAllFileRecordOfUser(userId) {
         });
 }
 
-export { getFileRecord };
-export { getAllFileRecordOfUser };
-export { addFileRecord };
+export { queryFileRecord, queryAllFileRecordOfUser, persistFileRecord };

@@ -1,4 +1,4 @@
-const mysqlx = require('@mysql/xdevapi');
+import { getClient } from '@mysql/xdevapi';
 const mysqlConfig = {
     connection: {
         user: process.env['DATABASE_USERNAME'],
@@ -18,12 +18,11 @@ const mysqlConfig = {
 //freezing databaseConfig object from further modifications
 Object.freeze(mysqlConfig);
 
-const mysqlClient = mysqlx.getClient(mysqlConfig.connection, {
+const mysqlClient = getClient(mysqlConfig.connection, {
     pooling: {
         enabled: true,
         maxSize: 200
     }
 });
 
-module.exports.mysqlConfig = mysqlConfig;
-module.exports.mysqlClient = mysqlClient;
+export { mysqlConfig, mysqlClient };
