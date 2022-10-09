@@ -28,9 +28,8 @@ function serverInit() {
             name: 'oauthVerfiedUser',
             keys: ['helloworld'],
             maxAge: 3 * 24 * 60 * 60 * 1000,
-            expires: 3 * 24 * 60 * 60 * 1000,
             path: '/',
-            sameSite: 'lax',
+            sameSite: 'strict',
             httpOnly: true,
             signed: true
         }),
