@@ -2,8 +2,8 @@ import { Router } from "express";
 import { fileUpload } from "../middleware/multer.mjs";
 
 function verifyUserAuth(req, res, next) {
-    console.log(req.session?.userId);
-    if (req.session?.userId) { next(); }
+    console.log(req.session?.user);
+    if (req.session?.user) { next(); }
     else {
         res.sendStatus(401);
     }

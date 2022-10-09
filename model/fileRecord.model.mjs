@@ -18,7 +18,7 @@ async function persistFileRecord(userId, fileStorageName, fileName, fileSize, fi
         .insert("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
         .values(userId, uuidV4(), fileStorageName, fileName, fileSize, fileType, filePath)
         .execute()
-        .then(async () => await getFileRecord(userId, fileStorageName));
+        .then(async () => await queryFileRecord(userId, fileStorageName));
 }
 
 async function queryFileRecord(userId, fileStorageName) {

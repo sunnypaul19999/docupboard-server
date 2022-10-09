@@ -9,9 +9,9 @@ async function getUser(userEmail) {
     }
 }
 
-async function addUser(userId, userEmail) {
+async function addUser(userEmail) {
     try {
-        return await persistUserIfNotExists(userId, userEmail);
+        return await persistUserIfNotExists(userEmail);
     } catch (err) {
         console.error(err, 'Failed to persist user');
         throw new Error('Failed to persist user');

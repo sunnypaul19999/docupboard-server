@@ -1,4 +1,5 @@
 import { mysqlConfig, mysqlClient } from '../config/database.config.mjs';
+import { v4 as uuidV4 } from 'uuid';
 
 async function getUserTable() {
     return mysqlClient.getSession().then(async (session) => {
@@ -51,30 +52,20 @@ async function queryUser(userEmail) {
         });
 }
 
-async function persistUserIfNotExists(userId, userEmail) {
+async function persistUserIfNotExists(userEmail) {
     const userTable = await getUserTable();
 
-    const user = await getUser(userEmail);
+    const user = await queryUser(userEmail);
 
     if (user == null) {
         return await userTable
             .insert("user_id", "user_email")
-            .values(userId, userEmail)
+            .values(uuidV4(), userEmail)
             .execute()
-            .then(async () => await getUser(userEmail));
+            .then(async () => await queryUser(userEmail));
     }
 
     return user;
 }
-
-// console.log('asfsf');
-// const user = addUser('232232', 'sdfadf', 'q222221', 'sdafsd')
-//     .then(res => {
-//         console.log(res);
-//     });
-
-// module.exports.getUsers = getUsers;
-// module.exports.getUser = getUser;
-// module.exports.addUserIfNotExists = addUserIfNotExists;
 
 export { queryUser, queryUsers, persistUserIfNotExists };

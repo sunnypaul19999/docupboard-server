@@ -1,24 +1,24 @@
 import { queryFileRecord, queryAllFileRecordOfUser, persistFileRecord } from '../model/fileRecord.model.mjs';
 
-async function addFileRecord(userId, userEmail) {
+async function addFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath) {
     try {
-        return await persistFileRecord(userId, userEmail);
+        return await persistFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath);
     } catch (err) {
         console.error(err, 'failed to persist file record');
     }
 }
 
-async function getFileRecord(userEmail) {
+async function getFileRecord(userId, fileStorageName) {
     try {
-        return await queryFileRecord(userEmail);
+        return await queryFileRecord(userId, fileStorageName);
     } catch (err) {
         console.error(err, 'failed to get file record from persistent storage');
     }
 }
 
-async function getUserFileRecords(userId, userEmail) {
+async function getUserFileRecords(userId) {
     try {
-        return await queryAllFileRecordOfUser(userId, userEmail);
+        return await queryAllFileRecordOfUser(userId);
     } catch (err) {
         console.error(err, 'failed to persist file record');
     }

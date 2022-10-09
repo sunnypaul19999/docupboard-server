@@ -69,12 +69,24 @@ async function onGoogleCallback(req, res) {
             }
         });
 
+        /*{
+            id: "113211975703774766613",
+            email: "hiensunberg@gmail.com",
+            verified_email: true,
+            name: "Hiensunberg Waters",
+            given_name: "Hiensunberg",
+            family_name: "Waters",
+            picture: "https://lh3.googleusercontent.com/a/ALm5wu0MZMPp5hCdsHhCDW1lunHHo_XyDIzoy4mcQp5P=s96-c",
+            locale: "en-GB"
+        }*/
         const userInfo = await getGoogleUserInfo(oauthRes.data.id_token, oauthRes.data.access_token);
         //on successfull login setting the user id in cookie
         try {
-            // await addUser(userInfo.id);
-            // req.session.userId = userInfo.id;
-            res.send(userInfo);
+            const user = await addUser(userInfo.email);
+            console.log(user);
+            req.session.user = user;
+            // res.send(userInfo);
+            res.send(user);
         } catch (err) {
             res.senStatus(500);
         }

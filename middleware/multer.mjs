@@ -1,6 +1,6 @@
 import multer, { diskStorage } from 'multer';
 import { v4 as uuidV4 } from 'uuid';
-import { getFileRecord } from '../model/FileRecord';
+import { getFileRecord } from '../service/fileRecord.service.mjs';
 
 const storage = diskStorage({
     destination: function (req, file, cb) {
@@ -9,9 +9,9 @@ const storage = diskStorage({
     filename: async (req, file, cb) => {
         const genFilename = () => uuidV4() + '-' + Date.now();
 
-        const userId = req.session.userId ?? '113211975703774766613';
+        const userEmail = req.session.user.user_id ?? 'hiensunberg@gmail.com';
         let fileStorageName = genFilename();
-        while (await getFileRecord(userId, fileStorageName)) {
+        while (await getFileRecord(user_id, fileStorageName)) {
             console.log('generating filename ' + fileStorageName);
             fileStorageName = genFilename();
         }
