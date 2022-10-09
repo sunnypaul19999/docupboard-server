@@ -1,9 +1,11 @@
 import { Router } from "express";
+import fileSystem from 'fs';
 import { multiPartFormFileUploadParser } from "../middleware/multer.mjs";
 import { addFileRecord, getFileRecord } from "../service/fileRecord.service.mjs";
 
+
 function verifyUserAuth(req, res, next) {
-    // console.log({ isSessionPopulated: req.session.isPopulated, session: req.session });
+    console.log({ isSessionPopulated: req.session.isPopulated, session: req.session });
     if (req.session.isPopulated) {
         next();
     } else {
@@ -36,11 +38,13 @@ userFileRouter.post('/user/file/upload', multiPartFormFileUploadParser, userFile
 async function userFileDownload(req, res) {
     const fileRecordId = req.params.fileRecordId;
     const userId = req.session.user.user_id;
-    if (fileId) {
+    // console.log(fileRecordId);
+    if (fileRecordId) {
         const fileRecord = await getFileRecord(userId, fileRecordId);
         if (fileRecord) {
 
             const filePath = fileRecord.file_path;
+            // console.log(filePath);
             const stat = fileSystem.statSync(filePath);
 
             res.writeHead(200, {
@@ -59,7 +63,7 @@ async function userFileDownload(req, res) {
         res.sendStatus(400);
     }
 }
-userFileRouter.post('/user/file/download/:fileRecordId', userFileDownload);
+userFileRouter.get('/user/file/download/:fileRecordId', userFileDownload);
 
 function userFiles(req, res) { }
 userFileRouter.post('/user/file/all', userFiles);

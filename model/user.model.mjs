@@ -76,14 +76,14 @@ async function queryUserById(userId) {
 async function persistUserIfNotExists(userEmail) {
     const userTable = await getUserTable();
 
-    const user = await queryUser(userEmail);
+    const user = await queryUserByEmail(userEmail);
 
     if (user == null) {
         return await userTable
             .insert("user_id", "user_email")
             .values(uuidV4(), userEmail)
             .execute()
-            .then(async () => await queryUser(userEmail));
+            .then(async () => await queryUserByEmail(userEmail));
     }
 
     return user;

@@ -39,7 +39,7 @@ async function queryFileRecord(userId, fileRecordId) {
                     file_name: result[3],
                     file_size: result[4],
                     file_type: result[5],
-                    // file_path: result[6]
+                    file_path: result[6]
                 };
             } else {
                 return null;
