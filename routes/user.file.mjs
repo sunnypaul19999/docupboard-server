@@ -7,10 +7,13 @@ import { addFileRecord, getFileRecord, getUserFileRecords } from "../service/fil
 function verifyUserAuth(req, res, next) {
     // console.log({ isSessionPopulated: req.session.isPopulated, session: req.session });
     if (req.session.isPopulated) {
-        next();
-    } else {
-        res.sendStatus(401);
+        if (req.session.user.user_id) {
+            next();
+            return;
+        }
     }
+
+    res.sendStatus(403);
 }
 
 const userFileRouter = Router();
