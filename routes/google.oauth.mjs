@@ -56,11 +56,11 @@ async function onGoogleCallback(req, res) {
         /*
         response on call to 'https://oauth2.googleapis.com/token':
             {
-                access_token: "ya29.a0Aa4xrXMdmJ5uhubi6fCFOnE_Sux9Dhq-wJqdE2GSbYpNsyy2o3OvvK15eTPbWSxJ90ExOf9a1tsvMu59n-TRsXYCIqmD7lNOChQh0_x3mGkwPQQlM2-ZF91tidyAouU-v-bIgI5ZSYagg7xihrsKSqranFmvaCgYKATASARMSFQEjDvL9re-eaLT_1jBIeXo7tB0nJw0163",
+                access_token: "",
                 expires_in: 3599,
                 scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
                 token_type: "Bearer",
-                id_token: "eyJhbGciOiJSUzI1NiIsImtpZCI6ImVkMzZjMjU3YzQ3ZWJhYmI0N2I0NTY4MjhhODU4YWE1ZmNkYTEyZGQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4MDI4MjEzODM0Ni10dnU1ZWY3M3NlMHZpcHJsc3BlZmlzcjZna3UyNXY3Mi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjgwMjgyMTM4MzQ2LXR2dTVlZjczc2UwdmlwcmxzcGVmaXNyNmdrdTI1djcyLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTEzMjExOTc1NzAzNzc0NzY2NjEzIiwiZW1haWwiOiJoaWVuc3VuYmVyZ0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6IkduVGtNWHFvUk81eUNfWHhFaTVCLVEiLCJuYW1lIjoiSGllbnN1bmJlcmcgV2F0ZXJzIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FMbTV3dTBNWk1QcDVoQ2RzSGhDRFcxbHVuSEhvX1h5REl6b3k0bWNRcDVQPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkhpZW5zdW5iZXJnIiwiZmFtaWx5X25hbWUiOiJXYXRlcnMiLCJsb2NhbGUiOiJlbi1HQiIsImlhdCI6MTY2NTI2MjU3MSwiZXhwIjoxNjY1MjY2MTcxfQ.kiRM_3A1EeqzT_vPXnlkjCvYVgg_tpj6_cazI6owT1Gz-QC5FtslBAdjQk-e3mcfKoPFRhv-MgBhLd3hTqNyUVyyQGBol0DEX9BNpvy7woWj65v-gSo2YSLQXraREsIE7i1VGNRLAk5xzedyG5A8M6BWh4sPGaOiCgXrIP6KXfqTLbzSA1-2lYO6JHf2fvku5dgduMXkdghifPl_Jo5wPlCmr9FQh6eLI3NHYLUCr0y_e2JBjzgub-RwQ8XTYdybrcl4T6xbWGeqXftHF-eEw4DBIFIWuZS2PmaKmwhzB-RavGSNCJy-liqVlNegQNaXPVEsbtUDFFJxxnXJb7xqog"
+                id_token: ""
             }
         */
         const oauthRes = await axios.post(url, googleOAuthAuthTokenBody, {
