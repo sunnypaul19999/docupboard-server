@@ -1,6 +1,6 @@
 import { mysqlClient } from '../config/database.config.mjs';
 import { mysqlConfig } from '../config/database.config.mjs';
-import uuid from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 
 async function getFileRecordTable() {
     return mysqlClient.getSession().then(async (session) => {
@@ -16,7 +16,7 @@ async function persistFileRecord(userId, fileStorageName, fileName, fileSize, fi
 
     return await userTable
         .insert("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
-        .values(userId, uuid.v4(), fileStorageName, fileName, fileSize, fileType, filePath)
+        .values(userId, uuidV4(), fileStorageName, fileName, fileSize, fileType, filePath)
         .execute()
         .then(async () => await getFileRecord(userId, fileStorageName));
 }

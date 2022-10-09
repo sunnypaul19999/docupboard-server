@@ -4,7 +4,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import cookieSession from 'cookie-session';
-import uuid from 'uuid';
+import { addUser } from '../service/user.service.mjs';
 
 dotenv.config();
 
@@ -71,8 +71,14 @@ async function onGoogleCallback(req, res) {
 
         const userInfo = await getGoogleUserInfo(oauthRes.data.id_token, oauthRes.data.access_token);
         //on successfull login setting the user id in cookie
-        req.session.userId = userInfo.id;
-        res.send(userInfo);
+        try {
+            // await addUser(userInfo.id);
+            // req.session.userId = userInfo.id;
+            res.send(userInfo);
+        } catch (err) {
+            res.senStatus(500);
+        }
+
     } catch (err) {
         console.log(err, 'failed to exchange auth token');
     }

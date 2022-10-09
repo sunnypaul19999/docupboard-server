@@ -1,4 +1,7 @@
 import { getClient } from '@mysql/xdevapi';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const mysqlConfig = {
     connection: {
         user: process.env['DATABASE_USERNAME'],
