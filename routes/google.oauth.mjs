@@ -88,8 +88,8 @@ async function onGoogleCallback(req, res) {
             //setting cookie value to 'oauthVerfiedUser'
             req.session.user = user;
 
-            // res.send(userInfo);
-            res.redirect('http://localhost:3000');
+            //directing user to user file upload page
+            res.redirect('http://localhost:3000/view/files');
         } catch (err) {
             res.senStatus(500);
         }

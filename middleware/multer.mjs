@@ -21,5 +21,6 @@ const storage = diskStorage({
 });
 //multer attaches 'file' object in 'req' --> req.file
 //https://github.com/expressjs/multer#readme
+//input element type='file' id='fileUpload'
 const multiPartFormFileUploadParser = multer({ storage: storage }).single('fileUpload');
 export { multiPartFormFileUploadParser };
