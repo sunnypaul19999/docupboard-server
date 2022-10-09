@@ -91,7 +91,7 @@ async function onGoogleCallback(req, res) {
             //directing user to user file upload page
             res.redirect('http://localhost:3000/view/files');
         } catch (err) {
-            res.senStatus(500);
+            res.setStatus(500);
         }
 
     } catch (err) {
