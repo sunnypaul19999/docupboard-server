@@ -51,7 +51,7 @@ async function userFileDownload(req, res) {
             const readStream = fileSystem.createReadStream(filePath);
             readStream.pipe(res);
         } else {
-            //when file with 'file_record_id' wrt to the 'user_id'
+            //when file with 'file_record_id' w.r.t to the 'user_id'
             //404 not found is sent
             res.sendStatus(404);
         }
