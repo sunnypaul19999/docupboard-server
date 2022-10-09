@@ -38,17 +38,23 @@ async function userFileDownload(req, res) {
     const userId = req.session.user.user_id;
     if (fileId) {
         const fileRecord = await getFileRecord(userId, fileRecordId);
+        if (fileRecord) {
 
-        const filePath = fileRecord.file_path;
-        const stat = fileSystem.statSync(filePath);
+            const filePath = fileRecord.file_path;
+            const stat = fileSystem.statSync(filePath);
 
-        res.writeHead(200, {
-            'Content-Length': stat.size,
-            'Content-Disposition': `attachment; filename = ${fileRecord.file_name}.${fileRecord.file_type}`
-        });
+            res.writeHead(200, {
+                'Content-Length': stat.size,
+                'Content-Disposition': `attachment; filename = ${fileRecord.file_name}.${fileRecord.file_type}`
+            });
 
-        const readStream = fileSystem.createReadStream(filePath);
-        readStream.pipe(res);
+            const readStream = fileSystem.createReadStream(filePath);
+            readStream.pipe(res);
+        } else {
+            //when file with 'file_record_id' wrt to the 'user_id'
+            //404 not found is sent
+            res.sendStatus(404);
+        }
     } else {
         res.sendStatus(400);
     }
