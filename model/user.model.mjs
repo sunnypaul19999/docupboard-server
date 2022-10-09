@@ -2,14 +2,14 @@ import { mysqlConfig, mysqlClient } from '../config/database.config.mjs';
 import { v4 as uuidV4 } from 'uuid';
 
 async function getUserTable() {
-    return mysqlClient.getSession().then(async (session) => {
-        const schema = session.getSchema(mysqlConfig.schema.name);
-        return schema.getTable(mysqlConfig.schema.table.user);
-    });
+    const mysqlSession = await mysqlClient.getSession();
+    const schema = mysqlSession.getSchema(mysqlConfig.schema.name);
+    const table = schema.getTable(mysqlConfig.schema.table.user)
+    return [mysqlSession, table];
 }
 
 async function queryUsers() {
-    const userTable = await getUserTable();
+    const [mysqlSession, userTable] = await getUserTable();
 
     return userTable
         .select("user_id", "user_email")
@@ -28,11 +28,13 @@ async function queryUsers() {
             }
 
             return result;
+        }).finally(() => {
+            mysqlSession.close();
         });
 }
 
 async function queryUserByEmail(userEmail) {
-    const userTable = await getUserTable();
+    const [mysqlSession, userTable] = await getUserTable();
 
     return userTable
         .select("user_id", "user_email")
@@ -49,11 +51,13 @@ async function queryUserByEmail(userEmail) {
             } else {
                 return null;
             }
+        }).finally(() => {
+            mysqlSession.close();
         });
 }
 
 async function queryUserById(userId) {
-    const userTable = await getUserTable();
+    const [mysqlSession, userTable] = await getUserTable();
 
     return userTable
         .select("user_id", "user_email")
@@ -70,11 +74,13 @@ async function queryUserById(userId) {
             } else {
                 return null;
             }
+        }).finally(() => {
+            mysqlSession.close();
         });
 }
 
 async function persistUserIfNotExists(userEmail) {
-    const userTable = await getUserTable();
+    const [mysqlSession, userTable] = await getUserTable();
 
     const user = await queryUserByEmail(userEmail);
 
@@ -83,7 +89,10 @@ async function persistUserIfNotExists(userEmail) {
             .insert("user_id", "user_email")
             .values(uuidV4(), userEmail)
             .execute()
-            .then(async () => await queryUserByEmail(userEmail));
+            .then(async () => await queryUserByEmail(userEmail))
+            .finally(() => {
+                mysqlSession.close();
+            });
     }
 
     return user;

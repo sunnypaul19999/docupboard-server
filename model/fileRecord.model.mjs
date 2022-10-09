@@ -4,24 +4,27 @@ import { v4 as uuidV4 } from 'uuid';
 import { getUserById } from '../service/user.service.mjs';
 
 async function getFileRecordTable() {
-    return mysqlClient.getSession().then(async (session) => {
-        const schema = session.getSchema(mysqlConfig.schema.name);
-        return schema.getTable(mysqlConfig.schema.table.file_record);
-    });
+    const mysqlSession = await mysqlClient.getSession();
+    const schema = mysqlSession.getSchema(mysqlConfig.schema.name);
+    const table = schema.getTable(mysqlConfig.schema.table.file_record)
+    return [mysqlSession, table];
 }
 
 async function persistFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath) {
-    const fileRecordTable = await getFileRecordTable();
+    const [mysqlSession, fileRecordTable] = await getFileRecordTable();
 
     return await fileRecordTable
         .insert("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
         .values(userId, uuidV4().toString(), fileStorageName, fileName, fileSize, fileType, filePath)
         .execute()
-        .then(async () => await queryFileRecord(userId, fileStorageName));
+        .then(async () => await queryFileRecord(userId, fileStorageName))
+        .finally(() => {
+            mysqlSession.close();
+        });
 }
 
 async function queryFileRecord(userId, fileRecordId) {
-    const fileRecordTable = await getFileRecordTable();
+    const [mysqlSession, fileRecordTable] = await getFileRecordTable();
     console.log(userId + ' ' + fileRecordId);
     return fileRecordTable
         .select("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
@@ -44,11 +47,14 @@ async function queryFileRecord(userId, fileRecordId) {
             } else {
                 return null;
             }
+        })
+        .finally(() => {
+            mysqlSession.close();
         });
 }
 
 async function queryAllFileRecordOfUser(userId) {
-    const fileRecordTable = await getFileRecordTable();
+    const [mysqlSession, fileRecordTable] = await getFileRecordTable();
 
     return fileRecordTable
         .select("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
@@ -75,6 +81,9 @@ async function queryAllFileRecordOfUser(userId) {
             }
 
             return result;
+        })
+        .finally(() => {
+            mysqlSession.close();
         });
 }
 
