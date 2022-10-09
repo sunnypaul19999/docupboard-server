@@ -1,6 +1,7 @@
 import { mysqlClient } from '../config/database.config.mjs';
 import { mysqlConfig } from '../config/database.config.mjs';
 import { v4 as uuidV4 } from 'uuid';
+import { getUserById } from '../service/user.service.mjs';
 
 async function getFileRecordTable() {
     return mysqlClient.getSession().then(async (session) => {
@@ -10,25 +11,23 @@ async function getFileRecordTable() {
 }
 
 async function persistFileRecord(userId, fileStorageName, fileName, fileSize, fileType, filePath) {
-    const userTable = await getFileRecordTable();
-    // console.log(userId, fileStorageName, fileName, fileSize, fileType);
-    // const user = await getUser(username);
+    const fileRecordTable = await getFileRecordTable();
 
-    return await userTable
+    return await fileRecordTable
         .insert("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
-        .values(userId, uuidV4(), fileStorageName, fileName, fileSize, fileType, filePath)
+        .values(userId, uuidV4().toString(), fileStorageName, fileName, fileSize, fileType, filePath)
         .execute()
         .then(async () => await queryFileRecord(userId, fileStorageName));
 }
 
-async function queryFileRecord(userId, fileStorageName) {
-    const userTable = await getFileRecordTable();
-    console.log(userId + ' ' + fileStorageName);
-    return userTable
+async function queryFileRecord(userId, fileRecordId) {
+    const fileRecordTable = await getFileRecordTable();
+    console.log(userId + ' ' + fileRecordId);
+    return fileRecordTable
         .select("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
-        .where('user_id = :userId and file_storage_name = :fileStorageName')
+        .where('user_id = :userId and file_record_id = :fileRecordId')
         .bind('userId', userId)
-        .bind('fileStorageName', fileStorageName)
+        .bind('fileRecordId', fileRecordId)
         .execute()
         .then(res => {
             const result = res.fetchOne();
@@ -49,9 +48,9 @@ async function queryFileRecord(userId, fileStorageName) {
 }
 
 async function queryAllFileRecordOfUser(userId) {
-    const userTable = await getFileRecordTable();
+    const fileRecordTable = await getFileRecordTable();
 
-    return userTable
+    return fileRecordTable
         .select("user_id", "file_record_id", "file_storage_name", "file_name", "file_size", "file_type", "file_path")
         .where('user_id = :userId')
         .bind('userId', userId)

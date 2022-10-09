@@ -31,13 +31,34 @@ async function queryUsers() {
         });
 }
 
-async function queryUser(userEmail) {
+async function queryUserByEmail(userEmail) {
     const userTable = await getUserTable();
 
     return userTable
         .select("user_id", "user_email")
         .where('user_email = :user_email')
         .bind('user_email', userEmail)
+        .execute()
+        .then(res => {
+            const result = res.fetchOne();
+            if (result) {
+                return {
+                    user_id: result[0],
+                    user_email: result[1]
+                };
+            } else {
+                return null;
+            }
+        });
+}
+
+async function queryUserById(userId) {
+    const userTable = await getUserTable();
+
+    return userTable
+        .select("user_id", "user_email")
+        .where('user_id = :userId')
+        .bind('userId', userId)
         .execute()
         .then(res => {
             const result = res.fetchOne();
@@ -68,4 +89,4 @@ async function persistUserIfNotExists(userEmail) {
     return user;
 }
 
-export { queryUser, queryUsers, persistUserIfNotExists };
+export { queryUserByEmail, queryUsers, queryUserById, persistUserIfNotExists };

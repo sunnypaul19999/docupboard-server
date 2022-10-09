@@ -1,8 +1,17 @@
-import { queryUser, persistUserIfNotExists } from '../model/user.model.mjs';
+import { queryUserByEmail, persistUserIfNotExists, queryUserById } from '../model/user.model.mjs';
 
-async function getUser(userEmail) {
+async function getUserByEmail(userEmail) {
     try {
-        return await queryUser(userEmail);
+        return await queryUserByEmail(userEmail);
+    } catch (err) {
+        console.error(err, 'Failed to load user from persistent storage');
+        throw new Error('Failed to load user from persistent storage');
+    }
+}
+
+async function getUserById(userId) {
+    try {
+        return await queryUserById(userId);
     } catch (err) {
         console.error(err, 'Failed to load user from persistent storage');
         throw new Error('Failed to load user from persistent storage');
@@ -19,4 +28,4 @@ async function addUser(userEmail) {
 }
 
 
-export { getUser, addUser };
+export { getUserByEmail, getUserById, addUser };

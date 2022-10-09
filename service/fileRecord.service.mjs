@@ -8,9 +8,9 @@ async function addFileRecord(userId, fileStorageName, fileName, fileSize, fileTy
     }
 }
 
-async function getFileRecord(userId, fileStorageName) {
+async function getFileRecord(userId, fileRecordId) {
     try {
-        return await queryFileRecord(userId, fileStorageName);
+        return await queryFileRecord(userId, fileRecordId);
     } catch (err) {
         console.error(err, 'failed to get file record from persistent storage');
     }

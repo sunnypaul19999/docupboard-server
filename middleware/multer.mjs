@@ -7,20 +7,18 @@ const storage = diskStorage({
         cb(null, process.env.FILE_UPLOAD_DIR);
     },
     filename: async (req, file, cb) => {
+        const userId = req.session.user.user_id;
         const genFilename = () => uuidV4() + '-' + Date.now();
-
-        const userEmail = req.session.user.user_id ?? 'hiensunberg@gmail.com';
         let fileStorageName = genFilename();
-        while (await getFileRecord(user_id, fileStorageName)) {
+
+        while (await getFileRecord(userId, fileStorageName)) {
             console.log('generating filename ' + fileStorageName);
             fileStorageName = genFilename();
         }
 
-        // const filetype = file.originalname.substring(file.originalname.indexOf('.'))
         cb(null, fileStorageName);
     }
 });
 
-const multiPartFileUploadParser = multer({ storage: storage });
-
-export { multiPartFileUploadParser };
+const multiPartFormFileUploadParser = multer({ storage: storage }).single('fileUpload');
+export { multiPartFormFileUploadParser };

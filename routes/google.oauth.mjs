@@ -83,10 +83,13 @@ async function onGoogleCallback(req, res) {
         //on successfull login setting the user id in cookie
         try {
             const user = await addUser(userInfo.email);
-            console.log(user);
+            // console.log(user);
+
+            //setting cookie value to 'oauthVerfiedUser'
             req.session.user = user;
+
             // res.send(userInfo);
-            res.send(user);
+            res.redirect('http://localhost:3000');
         } catch (err) {
             res.senStatus(500);
         }
