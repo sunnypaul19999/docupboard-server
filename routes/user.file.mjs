@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fileUpload } from "../middleware/multer.mjs";
+import { multiPartFileUploadParser } from "../middleware/multer.mjs";
 
 function verifyUserAuth(req, res, next) {
     console.log(req.session?.user);
@@ -14,7 +14,7 @@ userRouter.use('/user/file', verifyUserAuth);
 
 
 function userFileUpload(req, res) { }
-userRouter.post('/upload', fileUpload, userFileUpload);
+userRouter.post('/upload', multiPartFileUploadParser, userFileUpload);
 
 function userFileDownload(req, res) { }
 userRouter.post('/download/:fileId', userFileDownload);

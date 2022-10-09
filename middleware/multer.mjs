@@ -21,6 +21,6 @@ const storage = diskStorage({
     }
 });
 
-const fileUpload = multer({ storage: storage });
+const multiPartFileUploadParser = multer({ storage: storage });
 
-export { fileUpload };
+export { multiPartFileUploadParser };
